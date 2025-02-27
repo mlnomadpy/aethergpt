@@ -93,6 +93,7 @@ class SelfAttention(nn.Module):
         # Attention scores with improved numerical stability
         attn = squared_dot_product / (squared_dist + self.epsilon)
         attn = attn * inv_scale
+        attn = squash(attn)
 
         attn = jnp.where(mask, attn, jnp.finfo(self.dtype).min)
         attn = jax.nn.softmax(attn, axis=-1).astype(self.dtype)
