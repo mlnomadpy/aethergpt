@@ -142,7 +142,6 @@ def init_train_state(key, config: TrainConfig, learning_rate) -> TrainState:
         optax.nadamw(
             learning_rate,
             weight_decay=config.weight_decay, 
-            mask=param_decay_mask(params)
         ),
         optax.apply_every(config.gradient_accumulation_steps),
     )
