@@ -138,8 +138,11 @@ def init_train_state(key, config: TrainConfig, learning_rate) -> TrainState:
 
     # Create optimizer chain
     optimizer = optax.chain(
+        optax.clip_by_global_norm(config.grad_clip),
         optax.nadamw(
-            learning_rate
+            learning_rate,
+            weight_decay=config.weight_decay, 
+            mask=param_decay_mask(params)
         ),
         optax.apply_every(config.gradient_accumulation_steps),
     )
